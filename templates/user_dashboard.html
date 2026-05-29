@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Hotel Luna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { display: flex; min-height: 100vh; font-family: 'Lato', sans-serif; background: #f7f5f0; }
+        .sidebar {
+            width: 260px; background: #1e3a5f; color: #fff; padding: 2rem 1rem;
+            display: flex; flex-direction: column; box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+        }
+        .sidebar .logo {
+            font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin-bottom: 2.5rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .sidebar .logo i { color: #c9a96e; font-size: 2rem; }
+        .sidebar nav a {
+            color: #d0d9e4; text-decoration: none; padding: 12px 15px; border-radius: 8px;
+            display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+            font-weight: 500; transition: background 0.2s, color 0.2s;
+        }
+        .sidebar nav a i { width: 20px; text-align: center; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.15); color: #fff; }
+        .sidebar .logout-link {
+            color: #d0d9e4; text-decoration: none; padding: 12px 15px; border-radius: 8px;
+            display: flex; align-items: center; gap: 12px; margin-top: auto;
+            font-weight: 500; transition: background 0.2s, color 0.2s;
+        }
+        .sidebar .logout-link i { width: 20px; text-align: center; }
+        .sidebar .logout-link:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        .main-content { flex: 1; padding: 2.5rem 3rem; overflow-y: auto; }
+        .main-content h1 {
+            font-family: 'Poppins', sans-serif; color: #1e3a5f; margin-bottom: 0.5rem; font-size: 2rem;
+        }
+        .subtitle { color: #7f8c8d; margin-bottom: 2rem; font-size: 1.1rem; }
+        .card {
+            background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 2rem; margin-bottom: 2rem;
+        }
+        .card h2 {
+            font-family: 'Poppins', sans-serif; font-size: 1.4rem; color: #1e3a5f;
+            margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;
+        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-field { margin-bottom: 1.2rem; }
+        .input-field label {
+            display: block; font-weight: 600; color: #2c3e50; margin-bottom: 6px; font-size: 0.9rem;
+        }
+        .input-field input, .input-field select {
+            width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0;
+            border-radius: 10px; font-size: 1rem; background: #faf9f7;
+            transition: border 0.3s;
+        }
+        .input-field input:focus, .input-field select:focus { border-color: #c9a96e; outline: none; }
+        .btn-primary {
+            background: #1e3a5f; color: #fff; border: none; padding: 12px 30px;
+            border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif;
+            display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .btn-primary:hover { background: #2a5080; }
+        .btn-danger {
+            background: #e74c3c; color: #fff; border: none; padding: 8px 18px;
+            border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: background 0.3s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-danger:hover { background: #c0392b; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th { text-align: left; padding: 12px 15px; background: #f0ede6; color: #1e3a5f; font-family: 'Poppins', sans-serif; font-weight: 600; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        tr:hover { background: #faf8f5; }
+        .badge {
+            background: #e9f5e9; color: #27ae60; padding: 4px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600;
+        }
+        .badge-cancel { background: #fdecea; color: #e74c3c; }
+        .alert { padding: 12px 15px; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .alert-error { background: #fdecea; color: #c0392b; border-left: 4px solid #e74c3c; }
+        .alert-success { background: #e8f6ef; color: #1e8449; border-left: 4px solid #27ae60; }
+        .room-card {
+            background: #faf9f7; border-radius: 12px; padding: 1rem;
+            border: 1px solid #f0ede6; transition: transform 0.2s;
+        }
+        .room-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><i class="fas fa-hotel"></i> Hotel Luna</div>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="active"><i class="fas fa-calendar-plus"></i> New Reservation</a>
+            <a href="{{ url_for('my_bookings') }}"><i class="fas fa-list"></i> My Bookings</a>
+            <a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
+        </nav>
+        <a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    <div class="main-content">
+        <h1>Dashboard</h1>
+        <p class="subtitle">Welcome, {{ user.name }}! Choose a room and book your stay.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Our Rooms -->
+        <div class="card">
+            <h2><i class="fas fa-building" style="color:#c9a96e;"></i> Our Rooms</h2>
+            {% if rooms %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                {% for room in rooms %}
+                <div class="room-card">
+                    <h3 style="color:#1e3a5f; margin-bottom: 0.3rem;">{{ room.name }}</h3>
+                    <p style="font-size:0.9rem; color:#555;">{{ room.description or 'No description' }}</p>
+                    <p style="margin-top: 0.5rem;"><strong>Capacity:</strong> {{ room.capacity }}</p>
+                    <p><strong>Price:</strong> ₱{{ "%.2f"|format(room.price) }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color: #7f8c8d;">No rooms available at the moment.</p>
+            {% endif %}
+        </div>
+
+        <!-- Book a Room -->
+        <div class="card">
+            <h2><i class="fas fa-plus-circle" style="color:#c9a96e;"></i> Book a Room</h2>
+            <form action="{{ url_for('create_reservation') }}" method="POST" id="bookingForm">
+                <div class="form-grid">
+                    <div class="input-field">
+                        <label>Room</label>
+                        <select name="room_id" id="roomSelect" required>
+                            <option value="">-- Select Room --</option>
+                            {% for room in rooms %}
+                            <option value="{{ room.id }}">{{ room.name }} (Capacity: {{ room.capacity }}, ₱{{ "%.2f"|format(room.price) }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Guest Name</label>
+                        <input type="text" name="guest_name" placeholder="Juan Dela Cruz" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Date</label>
+                        <input type="date" name="date" id="dateInput" required min="{{ today }}">
+                    </div>
+                    <div class="input-field">
+                        <label>Time Slot</label>
+                        <select name="time_slot" id="timeSlotSelect" required disabled>
+                            <option value="">-- First select a room --</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Reserve Now</button>
+            </form>
+        </div>
+
+        <!-- My Reservations -->
+        <div class="card">
+            <h2><i class="fas fa-calendar-alt" style="color:#c9a96e;"></i> My Reservations</h2>
+            {% if bookings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Guest</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.room_name or 'N/A' }}</td>
+                        <td>{{ booking.guest_name }}</td>
+                        <td>{{ booking.date }}</td>
+                        <td>{{ booking.time_slot }}</td>
+                        <td>
+                            <span class="badge {% if booking.status == 'cancelled' %}badge-cancel{% endif %}">
+                                {{ booking.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if booking.status != 'cancelled' %}
+                            <form action="{{ url_for('cancel_reservation', reservation_id=booking.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Cancel this reservation?');">
+                                <button type="submit" class="btn-danger"><i class="fas fa-times"></i> Cancel</button>
+                            </form>
+                            {% else %}
+                            <span style="color:#95a5a6;">Cancelled</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color: #7f8c8d;">You have no reservations yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Fetch time slots when room selection changes
+        const roomSelect = document.getElementById('roomSelect');
+        const timeSlotSelect = document.getElementById('timeSlotSelect');
+        const dateInput = document.getElementById('dateInput');
+
+        async function loadTimeSlots() {
+            const roomId = roomSelect.value;
+            if (!roomId) {
+                timeSlotSelect.disabled = true;
+                timeSlotSelect.innerHTML = '<option value="">-- First select a room --</option>';
+                return;
+            }
+
+            // Optionally get date for future enhancement (e.g., already booked slots)
+            const date = dateInput.value;
+
+            try {
+                const response = await fetch(`/get_room_slots?room_id=${roomId}&date=${date}`);
+                const slots = await response.json();
+                
+                timeSlotSelect.disabled = false;
+                timeSlotSelect.innerHTML = '<option value="">-- Select Time Slot --</option>';
+                
+                if (slots.length === 0) {
+                    timeSlotSelect.innerHTML = '<option value="">No available slots for this room</option>';
+                    timeSlotSelect.disabled = true;
+                } else {
+                    slots.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot.slot;
+                        option.textContent = slot.slot;
+                        timeSlotSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading slots:', error);
+                timeSlotSelect.disabled = true;
+                timeSlotSelect.innerHTML = '<option value="">Error loading slots</option>';
+            }
+        }
+
+        roomSelect.addEventListener('change', loadTimeSlots);
+        // Optionally reload slots when date changes (if we want to filter already booked slots for that day)
+        dateInput.addEventListener('change', () => {
+            if (roomSelect.value) loadTimeSlots();
+        });
+    </script>
+</body>
+</html>

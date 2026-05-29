@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Room - Hotel Luna Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #f5f2eb 0%, #e8e0d5 100%);
+        }
+
+        /* ========== SIDEBAR STYLES ========== */
+        .sidebar {
+            width: 280px;
+            background: #1e3a5f;
+            color: #fff;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .sidebar .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .logo i {
+            color: #c9a96e;
+            font-size: 2rem;
+        }
+
+        .sidebar nav a {
+            color: #d0d9e4;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar nav a i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            transform: translateX(4px);
+        }
+
+        .sidebar .logout-link {
+            color: #d0d9e4;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .sidebar .logout-link:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            overflow-y: auto;
+        }
+
+        /* Page header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: #c9a96e;
+            font-size: 2rem;
+        }
+
+        .page-header p {
+            color: #5a6e7c;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        /* Card design */
+        .form-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-card-header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #142c48 100%);
+            padding: 1.5rem 2rem;
+            color: white;
+        }
+
+        .form-card-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .form-card-header h2 i {
+            color: #c9a96e;
+        }
+
+        .form-card-body {
+            padding: 2rem;
+        }
+
+        /* Form fields */
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e3a5f;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+
+        .input-group label i {
+            color: #c9a96e;
+            width: 24px;
+            margin-right: 6px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-family: 'Lato', sans-serif;
+            background: #fefcf8;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #c9a96e;
+            box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.2);
+            background: #ffffff;
+        }
+
+        .row-2cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #1e3a5f;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-primary:hover {
+            background: #2a5080;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 58, 95, 0.2);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e3a5f;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #edf2f7;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 14px 18px;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .alert-success {
+            background: #e6f7ec;
+            color: #1e7e34;
+            border-left: 5px solid #27ae60;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .row-2cols {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-card-body {
+                padding: 1.5rem;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-hotel"></i> Hotel Luna
+        </div>
+        <nav>
+            <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('admin_existing_rooms') }}"><i class="fas fa-list"></i> Existing Rooms</a>
+            <a href="{{ url_for('admin_add_room') }}" class="active"><i class="fas fa-plus-circle"></i> Rooms</a>
+            <a href="{{ url_for('admin_users') }}"><i class="fas fa-users"></i> Users</a>
+        </nav>
+        <a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-hotel"></i> Room Management</h1>
+            <p>Add a new room to your hotel inventory. Fill in the details below.</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2><i class="fas fa-plus-circle"></i> Add New Room</h2>
+            </div>
+            <div class="form-card-body">
+                <form action="{{ url_for('add_room') }}" method="POST">
+                    <div class="input-group">
+                        <label><i class="fas fa-tag"></i> Room Name</label>
+                        <input type="text" name="name" placeholder="e.g., Ocean View Suite, Deluxe King" required autofocus>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fas fa-align-left"></i> Description</label>
+                        <textarea name="description" rows="3" placeholder="Describe the room features, view, amenities..."></textarea>
+                    </div>
+
+                    <div class="row-2cols">
+                        <div class="input-group">
+                            <label><i class="fas fa-dollar-sign"></i> Price (₱ per night)</label>
+                            <input type="number" name="price" step="0.01" value="0.00" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-users"></i> Capacity (persons)</label>
+                            <input type="number" name="capacity" value="1" min="1">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{{ url_for('admin_existing_rooms') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

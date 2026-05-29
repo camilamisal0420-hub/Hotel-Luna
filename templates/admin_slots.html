@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Slot Management - Hotel Luna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { display: flex; min-height: 100vh; font-family: 'Lato', sans-serif; background: #f7f5f0; }
+        .sidebar { width: 260px; background: #1e3a5f; color: #fff; padding: 2rem 1rem; display: flex; flex-direction: column; }
+        .sidebar .logo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 10px; }
+        .sidebar .logo i { color: #c9a96e; font-size: 2rem; }
+        .sidebar nav a { color: #d0d9e4; text-decoration: none; padding: 12px 15px; border-radius: 8px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-weight: 500; transition: background 0.2s, color 0.2s; }
+        .sidebar nav a i { width: 20px; text-align: center; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: rgba(255,255,255,0.15); color: #fff; }
+        .sidebar .logout-link { color: #d0d9e4; text-decoration: none; padding: 12px 15px; border-radius: 8px; display: flex; align-items: center; gap: 12px; margin-top: auto; font-weight: 500; transition: background 0.2s, color 0.2s; }
+        .sidebar .logout-link:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        .main-content { flex: 1; padding: 2.5rem 3rem; }
+        .card { background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 2rem; margin-bottom: 2rem; }
+        h2 { font-family: 'Poppins', sans-serif; color: #1e3a5f; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        
+        /* Consistent buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-primary { background: #1e3a5f; color: #fff; }
+        .btn-primary:hover { background: #2a5080; }
+        .btn-danger { background: #e74c3c; color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #95a5a6; color: #fff; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th { text-align: left; padding: 12px; background: #f0ede6; color: #1e3a5f; font-weight: 600; }
+        td { padding: 12px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        tr:hover { background: #faf8f5; }
+        
+        .input-field { margin-bottom: 1rem; }
+        .input-field label { display: block; font-weight: 600; margin-bottom: 6px; color: #2c3e50; }
+        .input-field input { 
+            width: 100%; padding: 10px; border: 1px solid #e0e0e0; 
+            border-radius: 8px; font-size: 0.95rem; background: #faf9f7;
+        }
+        .input-field input:focus { 
+            outline: none; border-color: #c9a96e; 
+        }
+        
+        .search-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            position: relative;
+            width: 280px;
+        }
+        .search-box i {
+            position: absolute; left: 12px; top: 50%;
+            transform: translateY(-50%); color: #95a5a6;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #faf9f7;
+            transition: all 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #c9a96e;
+            box-shadow: 0 0 0 2px rgba(201,169,110,0.2);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 1rem; }
+        .alert-error { background: #fdecea; color: #c0392b; border-left: 4px solid #e74c3c; }
+        .alert-success { background: #e8f6ef; color: #1e8449; border-left: 4px solid #27ae60; }
+        
+        @media (max-width: 768px) {
+            .main-content { padding: 1.5rem; }
+            .search-box { width: 100%; }
+            .search-form { width: 100%; }
+            .actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><i class="fas fa-hotel"></i> Hotel Luna</div>
+        <nav>
+            <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('admin_rooms') }}"><i class="fas fa-door-open"></i> Rooms</a>
+            <a href="{{ url_for('admin_users') }}"><i class="fas fa-users"></i> Users</a>
+            <a href="{{ url_for('admin_slots') }}" class="active"><i class="fas fa-clock"></i> Time Slots</a>
+        </nav>
+        <a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    <div class="main-content">
+        <h2><i class="fas fa-clock" style="color:#c9a96e;"></i> Time Slot Management</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Add New Slot Card -->
+        <div class="card">
+            <h2><i class="fas fa-plus-circle" style="color:#c9a96e;"></i> Add New Time Slot</h2>
+            <form action="{{ url_for('add_slot') }}" method="POST">
+                <div class="input-field">
+                    <label>Slot (e.g., 07:00-08:00)</label>
+                    <input type="text" name="slot" placeholder="07:00-08:00" required>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Slot</button>
+            </form>
+        </div>
+        
+        <!-- Existing Slots Card with Search -->
+        <div class="card">
+            <div class="search-section">
+                <h2 style="margin-bottom:0;"><i class="fas fa-clock" style="color:#c9a96e;"></i> Current Slots</h2>
+                <form method="GET" action="{{ url_for('admin_slots') }}" class="search-form">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search_slot" placeholder="Search by time slot..." value="{{ search_slot or '' }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                    {% if search_slot %}
+                        <a href="{{ url_for('admin_slots') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Clear</a>
+                    {% endif %}
+                </form>
+            </div>
+
+            {% if slots %}
+            <table>
+                <thead>
+                    <tr><th>Slot</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    {% for s in slots %}
+                    <tr>
+                        <td>{{ s.slot }}</td>
+                        <td class="actions">
+                            <form action="{{ url_for('delete_slot', slot_id=s.id) }}" method="POST" onsubmit="return confirm('Delete this time slot?');">
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="margin-top:1rem; color:#7f8c8d;">No time slots found matching your search.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

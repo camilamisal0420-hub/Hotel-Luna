@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Room - Hotel Luna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #f7f5f0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            color: #1e3a5f;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-field {
+            margin-bottom: 1rem;
+        }
+        .input-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #2c3e50;
+        }
+        .input-field input,
+        .input-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #faf9f7;
+            transition: all 0.2s;
+        }
+        .input-field input:focus,
+        .input-field textarea:focus {
+            outline: none;
+            border-color: #c9a96e;
+            box-shadow: 0 0 0 2px rgba(201,169,110,0.2);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: #1e3a5f;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #2a5080;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #1e8449;
+        }
+        .btn-warning {
+            background: #f39c12;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        .btn-secondary {
+            background: #95a5a6;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th {
+            text-align: left;
+            padding: 12px;
+            background: #f0ede6;
+            color: #1e3a5f;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #2c3e50;
+        }
+        tr:hover {
+            background: #faf8f5;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        .slot-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-available {
+            background: #e8f6ef;
+            color: #27ae60;
+        }
+        .badge-unavailable {
+            background: #fdecea;
+            color: #e74c3c;
+        }
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .slot-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Edit Room Details Card -->
+        <div class="card">
+            <h2><i class="fas fa-edit" style="color:#c9a96e;"></i> Edit Room Details</h2>
+            <form action="{{ url_for('edit_room', room_id=room.id) }}" method="POST">
+                <div class="input-field">
+                    <label>Room Name</label>
+                    <input type="text" name="name" value="{{ room.name }}" required>
+                </div>
+                <div class="input-field">
+                    <label>Description</label>
+                    <textarea name="description" rows="2">{{ room.description }}</textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="input-field">
+                        <label>Price (₱)</label>
+                        <input type="number" name="price" step="0.01" value="{{ room.price }}">
+                    </div>
+                    <div class="input-field">
+                        <label>Capacity</label>
+                        <input type="number" name="capacity" value="{{ room.capacity }}">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <!-- FIXED: Changed admin_rooms to admin_existing_rooms -->
+                    <a href="{{ url_for('admin_existing_rooms') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update Room</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Time Slot Management Card -->
+        <div class="card">
+            <h2><i class="fas fa-clock" style="color:#c9a96e;"></i> Time Slots for {{ room.name }}</h2>
+            
+            <!-- Add new slot form -->
+            <form action="{{ url_for('add_room_slot', room_id=room.id) }}" method="POST" style="margin-bottom: 2rem;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 2; min-width: 200px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 6px;">New Time Slot</label>
+                        <input type="text" name="slot" placeholder="e.g., 09:00-10:00" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Slot</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Existing slots table -->
+            {% if room_slots %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot in room_slots %}
+                    <tr>
+                        <td>{{ slot.slot }}</td>
+                        <td>
+                            <span class="badge {% if slot.is_available %}badge-available{% else %}badge-unavailable{% endif %}">
+                                {{ 'Available' if slot.is_available else 'Unavailable' }}
+                            </span>
+                        </td>
+                        <td class="slot-actions">
+                            <!-- Toggle availability -->
+                            <form action="{{ url_for('toggle_room_slot', slot_id=slot.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm {% if slot.is_available %}btn-warning{% else %}btn-success{% endif %}">
+                                    <i class="fas {% if slot.is_available %}fa-ban{% else %}fa-check{% endif %}"></i>
+                                    {% if slot.is_available %}Disable{% else %}Enable{% endif %}
+                                </button>
+                            </form>
+                            <!-- Delete slot -->
+                            <form action="{{ url_for('delete_room_slot', slot_id=slot.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Delete this time slot?');">
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color: #7f8c8d;">No time slots defined for this room yet. Add one above.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
